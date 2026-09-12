@@ -20,6 +20,11 @@ rustPlatform.buildRustPackage (finalAttrs: {
 
   cargoHash = "sha256-6gJ9PwDGivybIygjGHP+G6f6d1bs7ukTOr59Oq2j6e4=";
 
+  # Drop after kache reads a filesystem SDKROOT without going through xcrun.
+  # nixpkgs Darwin sets SDKROOT to the Apple SDK store path; xcbuild's xcrun
+  # rejects that as `--sdk` and native-link cache keys fail closed.
+  patches = [ ./sdkroot-path.patch ];
+
   cargoBuildFlags = [
     "-p"
     "kache"
